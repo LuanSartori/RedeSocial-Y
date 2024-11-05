@@ -8,13 +8,9 @@ app.use(express.json()); // aceita as requisições em json
 app.use(express.urlencoded({extended: false})); // desabilita objetos alinhados no body das requisições
 app.use(morgan('dev')); // log das requisições no terminal
 
-// IMPORTANDO AS ROTAS
-import indexRouter from './routes/index.js';
-import usuarioRouter from './routes/usuarioRoute.js';
-
-// CONFIGURANDO AS ROTAS
-app.use("/", indexRouter);
-app.use("/usuarios", usuarioRouter);
+// CONFIGURA AS ROTAS
+import rotas from "./routes/index.js"
+rotas(app);
 
 // Função para sincronizar o banco de dados e iniciar o servidor
 const startServer = async () => {
