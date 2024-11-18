@@ -1,10 +1,11 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database.js";
 import Usuarios from "./usuarios.js";
+import Publicacoes from "./publicacoes.js";
 
 
-class Publicacoes extends Model {}
-Publicacoes.init(
+class Comentarios extends Model {}
+Comentarios.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -16,7 +17,11 @@ Publicacoes.init(
       type: DataTypes.UUID,
       allowNull: false,
     },
-    publicacao: {
+    publicacao_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    comentario: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -28,11 +33,14 @@ Publicacoes.init(
   },
   {
     sequelize,
-    modelName: "Publicacoes",
+    modelName: "Comentarios",
   }
 );
 
-Publicacoes.belongsTo(Usuarios, { foreignKey: "usuario_id" });
-Usuarios.hasMany(Publicacoes, { foreignKey: "usuario_id" });
+Comentarios.belongsTo(Usuarios, { foreignKey: "usuario_id" });
+Usuarios.hasMany(Comentarios, { foreignKey: 'usuario_id' });
 
-export default Publicacoes;
+Comentarios.belongsTo(Publicacoes, { foreignKey: "publicacao_id" });
+Publicacoes.hasMany(Comentarios, { foreignKey: "publicacao_id" })
+
+export default Comentarios;

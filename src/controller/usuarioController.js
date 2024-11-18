@@ -1,5 +1,4 @@
-import Usuario from "../models/usuario.js";
-import { Sequelize } from 'sequelize';
+import Usuario from "../models/usuarios.js";
 
 
 // listar os usuários
@@ -11,7 +10,7 @@ export const listarUsuarios = async (req, res) => {
 
 // criar um novo usuário
 export const criarUsuario = async (req, res) => {
-    const { nome, email, senha, dataNasc, nick } = req.body;
-    const usuario = await Usuario.create({ nome, email, senha, dataNasc, nick });
+    const data = req.body;
+    const usuario = await Usuario.create(data);
     res.status(201).json(usuario);
 };

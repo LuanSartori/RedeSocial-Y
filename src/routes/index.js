@@ -6,7 +6,6 @@ import usuarioRouter from "./usuarioRoute.js";
 const router = express.Router();
 router.get("/", function (req, res) {
     res.json("BOM DIAA!");
-    // res.redirect("/");
 });
 
 

@@ -1,12 +1,12 @@
-import express from "express";
-import morgan from "morgan";
 import sequelize from "./config/database.js";
+import morgan from "morgan";
+import express from "express";
+const app = express();
 
 // MIDDLEWARES
-const app = express();
+app.use(morgan('dev')); // log das requisições no terminal
 app.use(express.json()); // aceita as requisições em json
 app.use(express.urlencoded({extended: false})); // desabilita objetos alinhados no body das requisições
-app.use(morgan('dev')); // log das requisições no terminal
 
 // CONFIGURA AS ROTAS
 import rotas from "./routes/index.js"
