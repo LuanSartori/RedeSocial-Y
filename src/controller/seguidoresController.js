@@ -1,4 +1,6 @@
 import sequelize from 'sequelize';
+import Seguidores from "../models/seguidores.js";
+import Usuarios from "../models/usuarios.js";
 const seguidoresController = {};
 
 
