@@ -24,15 +24,16 @@ Publicacoes.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
-    },
+    }
   },
   {
     sequelize,
     modelName: "Publicacoes",
+    timestamps: true
   }
 );
 
 Publicacoes.belongsTo(Usuarios, { foreignKey: "usuario_id" });
-Usuarios.hasMany(Publicacoes, { foreignKey: "usuario_id" });
+Usuarios.hasMany(Publicacoes, { foreignKey: "usuario_id", as: "Publicacao" });
 
 export default Publicacoes;

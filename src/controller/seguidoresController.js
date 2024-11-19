@@ -1,7 +1,11 @@
-import Seguidores from '../seguidores/:usuarios_id'; //ou usuarios.js? e os ::?
 import sequelize from 'sequelize';
+const seguidoresController = {};
+
 
 //seguir um usuário
-export const listarSeguidores = async (req, res) => {
+seguidoresController.listarSeguidores = async (req, res) => {
 
 }
+
+
+export default seguidoresController;

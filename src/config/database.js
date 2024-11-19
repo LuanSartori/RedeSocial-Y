@@ -6,7 +6,7 @@ const sequelize = new Sequelize({
     dialect: "sqlite",
     storage: "./database.sqlite",
     define: {
-        timestamps: false
+        timestamps: true
     },
     logging: console.log
 })

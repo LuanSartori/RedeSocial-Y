@@ -24,6 +24,7 @@ Seguidores.init(
   {
     sequelize,
     modelName: "Seguidores",
+    timestamps: false
   }
 );
 
