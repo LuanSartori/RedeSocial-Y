@@ -1,4 +1,5 @@
 import express from 'express';
+import Publicacoes from '../models/publicacoes.js';
 import Usuarios from '../models/usuarios.js';
 
 
@@ -9,8 +10,7 @@ router.get("/", async function (req, res) {
     console.log("INÍCIO");
     try {
 
-        const user = await Usuarios.findByPk("123")
-        console.log(user)
+        // testes aqui
 
     } catch (err) {
         console.log(err)
