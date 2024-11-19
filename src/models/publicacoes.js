@@ -33,7 +33,7 @@ Publicacoes.init(
   }
 );
 
-Publicacoes.belongsTo(Usuarios, { foreignKey: "usuario_id" });
-Usuarios.hasMany(Publicacoes, { foreignKey: "usuario_id", as: "Publicacao" });
+Publicacoes.belongsTo(Usuarios, { foreignKey: "usuario_id", as: "usuario" });
+Usuarios.hasMany(Publicacoes, { foreignKey: "usuario_id", as: "publicacao" });
 
 export default Publicacoes;
