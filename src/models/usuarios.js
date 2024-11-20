@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database.js";
+import Seguidores from "./seguidores.js";
 
 
 class Usuarios extends Model {}
@@ -42,5 +43,17 @@ Usuarios.init(
   }
 );
 
+Usuarios.belongsToMany(Usuarios, {
+  through: Seguidores,
+  foreignKey: 'usuario_id',
+  otherKey: 'usuario_seguido_id',
+  as: "seguindo"
+});
+Usuarios.belongsToMany(Usuarios, {
+  through: Seguidores,
+  foreignKey: 'usuario_seguido_id',
+  otherKey: 'usuario_id',
+  as: "seguidor"
+});
 
 export default Usuarios;
