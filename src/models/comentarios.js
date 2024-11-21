@@ -20,6 +20,7 @@ Comentarios.init(
     publicacao_id: {
       type: DataTypes.UUID,
       allowNull: false,
+      onDelete: 'CASCADE'
     },
     comentario: {
       type: DataTypes.STRING,
@@ -40,7 +41,7 @@ Comentarios.init(
 Comentarios.belongsTo(Usuarios, { foreignKey: "usuario_id", as: "usuario" });
 Usuarios.hasMany(Comentarios, { foreignKey: "usuario_id", as: "comentarios" });
 
-Comentarios.belongsTo(Publicacoes, { foreignKey: "publicacao_id", as: "publicacao" });
-Publicacoes.hasMany(Comentarios, { foreignKey: "publicacao_id" })
+Comentarios.belongsTo(Publicacoes, { foreignKey: "publicacao_id", as: "publicacao"});
+Publicacoes.hasMany(Comentarios, { foreignKey: "publicacao_id", as: "comentarios"})
 
 export default Comentarios;
