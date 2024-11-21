@@ -37,10 +37,10 @@ Comentarios.init(
   }
 );
 
-Comentarios.belongsTo(Usuarios, { foreignKey: "usuario_id" });
-Usuarios.hasMany(Comentarios, { foreignKey: 'usuario_id' });
+Comentarios.belongsTo(Usuarios, { foreignKey: "usuario_id", as: "usuario" });
+Usuarios.hasMany(Comentarios, { foreignKey: "usuario_id", as: "comentarios" });
 
-Comentarios.belongsTo(Publicacoes, { foreignKey: "publicacao_id" });
+Comentarios.belongsTo(Publicacoes, { foreignKey: "publicacao_id", as: "publicacao" });
 Publicacoes.hasMany(Comentarios, { foreignKey: "publicacao_id" })
 
 export default Comentarios;
