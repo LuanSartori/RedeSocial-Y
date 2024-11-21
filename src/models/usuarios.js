@@ -47,13 +47,19 @@ Usuarios.belongsToMany(Usuarios, {
   through: Seguidores,
   foreignKey: 'usuario_id',
   otherKey: 'usuario_seguido_id',
-  as: "seguindo"
+  as: {
+    singular: "seguir",
+    plural: "seguem"
+  }
 });
 Usuarios.belongsToMany(Usuarios, {
   through: Seguidores,
   foreignKey: 'usuario_seguido_id',
   otherKey: 'usuario_id',
-  as: "seguidor"
+  as: {
+    singular: "seguidor",
+    plural: "seguidores"
+  }
 });
 
 export default Usuarios;

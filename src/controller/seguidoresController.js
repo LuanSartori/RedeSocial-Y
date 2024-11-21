@@ -1,117 +1,142 @@
-import sequelize from 'sequelize';
 import Usuarios from "../models/usuarios.js";
-import Seguidores from '../models/seguidores.js';
-import Seguidores from '../models/seguidores.js';
-import Seguidores from '../models/seguidores.js';
-import Seguidores from '../models/seguidores.js';
-import Seguidores from '../models/seguidores.js';
 const seguidoresController = {};
 
 
-//seguir um usuário:
 seguidoresController.seguirUsuario = async (req, res) => {
-    const { usuario_a_seguir, usuario_id } = req.body;
+    const { usuario_id, usuario_a_seguir_id } = req.body;
+    
+    if (!toString(usuario_id).trim() || !toString(usuario_a_seguir_id).trim()) {
+        res.status(400).json({ message: 'Todos os campos são obrigatórios'});
+        return;
+    } else if ( usuario_id == usuario_a_seguir_id) {
+        res.status(400).json({ message: 'Você não pode seguir a si mesmo.' });
+        return;
+    }
 
     try {
-        const seguidores = await seguidores.findByPk(usuario_id); 
-        const seguir = await seguidores.update( {
-            usuario_seguido_id: usuario_a_seguir
-           },
-           {
-            where: {
-                usuario_id: usuario_id
-            }
-            res.status(201).json({"Sucesso ao seguir o usuário!"});
-        return;
-           }
-        );
-        
-    } catch (erro) { //tô confusa nesses if else, tentei fazer como estava pedindo no documento, todos os 4 erros diferentes
-         if (usuario_id = false) {
-            return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
-        } if else (_seguir) {
-            return res.status(400).json({ message: 'Você já segue esse usuário.' });
-        } if else (usuario_id = ) { //como eu vou colocar q o usuario_id é o mesmo da própria pessoa? tem alguma função ou dado pra isso?
-            return res.status(400).json({ message: 'Você não pode seguir a si mesmo.' });
-        } else (!usuario_id) { //?? na minha cabeça dava pra usar um Not Found, mas parece que não. não sei como não encontrar um usuário
-            return res.status(404).json({ message: 'Usuário a ser seguido não encontrado.' })
+        const usuario_que_segue = await Usuarios.findByPk(usuario_id);
+        const usuario_a_seguir = await Usuarios.findByPk(usuario_a_seguir_id);
+
+        if (!usuario_a_seguir){
+            res.status(404).json({ message: 'Usuário a ser seguido não encontrado.' });
+            return;
+        } else if (await usuario_a_seguir.hasSeguidor(usuario_que_segue)) {
+            res.status(400).json({ message: 'Você já segue esse usuário.' });
+            return;
         };
+
+        await usuario_a_seguir.addSeguidor(usuario_que_segue);
+        res.status(201).json({ seguidor_id: usuario_a_seguir_id });
+        return;
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({'erro': 'Erro ao seguir usuário'});
     }
 }
     
 
-//deixar de seguir um usuário:
 seguidoresController.deixarDeSeguirUsuario = async (req, res) => {
-    const { usuario_a_seguir, usuario_id } = req.body;
+    const { usuario_id, usuario_a_seguir_id } = req.body;
+
+    if (!usuario_id.trim() || !usuario_a_seguir_id.trim()) {
+        res.status(400).json({ message: 'Todos os campos são obrigatórios'});
+        return;
+    };
 
     try {
-        const seguidores = await seguidores.findByPk(usuario_id); 
-        const deixarDeSeguir = await seguidores.delete( {
-            usuario_seguido_id: usuario_a_seguir //não sei se precisa mudar alguma coisa nessa linha
-           },
-           {
-            where: {
-                usuario_id: usuario_id //aqui tbm acho que tem q mudar, mas não sei como
-            }
-            res.status(200).json({"Sucesso ao deixar de seguir o usuário!"});
+        const usuario_que_segue = await Usuarios.findByPk(usuario_id);
+        const usuario_a_deixar_de_seguir = await Usuarios.findByPk(usuario_a_seguir_id);
+
+        if (!usuario_a_deixar_de_seguir){ 
+            res.status(404).json({ message: 'Usuário a ser seguido não encontrado.' });
+            return;
+        } else if (!usuario_a_deixar_de_seguir.hasSeguidor(usuario_que_segue)) {
+            res.status(400).json({ message: 'Você não segue esse usuário.' });
+            return;
+        };
+
+        usuario_a_deixar_de_seguir.removeSeguidor(usuario_que_segue);
+        res.status(201).json({ seguidor_id: usuario_a_seguir_id });
         return;
-           }
-        );
         
     } catch (erro) { 
-         if (usuario_id = false) { //tá certo?
-            return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
-        } else ( ) { //qual lógica eu tenho que usar aqui??
-            return res.status(400).json({ message: 'Você não segue este usuário.' });
-        };
+        res.status(500).json({ 'erro': 'Erro ao deixar de seguir usuário.' });
     }
 }
 
 
-//listagem de seguidores de um usuário:
 seguidoresController.listagemDeSeguidores = async (req, res) => {
-    try {
-        const {usuario_id} = req.params;
+    const { usuario_id } = req.params;
+    const page = req.params.page || 1;
+    const limit = req.params.page || 10;
+    var data = [];
 
-        const Seguidores = await Seguidores.findAll(
-            {
-                where: {
-                    seguidores_id: usuario_id
-                },
-                include: [ //é aqui que são os paramwtros?por algum motivo acho que os atributos ficariam nos models. 
-                    { model: Usuarios, as: 'Seguidores', attributes: ["seguidores_id", "nome", "nick", "imagem", total: Seguidores.findAll, currentPage:1, totalPages:10 ]}
-                ]
-            }
-            res.status(200).json({Seguidores});
+    try {
+        const usuario = await Usuarios.findByPk(usuario_id);
+        if (!usuario) {
+            res.status(400).json({ 'erro': 'Usuário não encontrado.' });
+            return;
+        };
+
+        const seguidores = await usuario.getSeguidores();
+        seguidores.forEach(user => {
+            data.push({
+                seguidor_id: user.id,
+                nome: user.nome,
+                nick: user.nick,
+                imagem: user.imagem
+            })
+        });
+
+        const total = data.length;
+        const totalPages = Math.ceil(total / limit);
+        res.status(200).json({
+            data: data,
+            total: data.length,
+            currentPage: page,
+            totalPages: totalPages
+        })
         return;
-        );
 
     } catch (erro) {
-        res.status(500).json({ error: 'Erro ao buscar seguidores.'});
+        res.status(500).json({ 'erro': 'Erro ao buscar seguidores.'});
+        return;
     }
 }
 
 
-//listagem de usuários que um usuário segue:
 seguidoresController.listagemDeUsuarios = async (req, res) => {
-    try {
-        const {usuario_id} = req.params;
+    const { usuario_id } = req.params;
+    var data = [];
 
-        const Seguindo = await Seguidores.findAll( //Seguidores mesmo ou Seguindo?
-            {
-                where: {
-                    usuario_seguido_id: usuario_id
-                },
-                include: [ //é aqui que são os paramwtros?por algum motivo acho que os atributos ficariam nos models. 
-                    { model: Usuarios, as: 'Seguindo', attributes: ["seguidores_id", "nome", "nick", "imagem", total: Seguindo.findAll, currentPage:1, totalPages:10 ]}
-                ]
-            }
-            res.status(200).json({Seguindo});
+    try {
+        const usuario = await Usuarios.findByPk(usuario_id);
+        if (!usuario) {
+            res.status(400).json({ 'erro': 'Usuário não encontrado.' });
+            return;
+        };
+
+        const usuarios_seguidos = await usuario.getSeguem();
+        usuarios_seguidos.forEach(user => {
+            data.push({
+                usuario_id: user.id,
+                nome: user.nome,
+                nick: user.nick,
+                imagem: user.imagem
+            })
+        });
+
+        const total = data.length;
+        res.status(200).json({
+            data: data,
+            total: total,
+        })
         return;
-        );
 
     } catch (erro) {
-        res.status(500).json({ error: 'Erro ao buscar usuários seguidos.'});
+        res.status(500).json({ 'erro': 'Erro ao buscar usuários seguidos.'});
+        return;
     }
 }
 

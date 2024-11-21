@@ -1,10 +1,12 @@
 import express from 'express';
-import { seguirUsuario, deixarDeSeguirUsuario, listagemDeSeguidores, listagemDeUsuarios } from "../controller/seguidoresController";
+import controller from "../controller/seguidoresController.js";
+
 
 const router = express.Router();
-router.post('/seguidores', seguirUsuario);
-router.delete('/seguidores', deixarDeSeguirUsuario);
-router.get('/seguidores/:usuario_id', listagemDeSeguidores);
-router.get('/seguidores/seguindo/:usuario_id', listagemDeUsuarios);
+router.post('/', controller.seguirUsuario);
+router.delete('/', controller.deixarDeSeguirUsuario);
+router.get('/:usuario_id', controller.listagemDeSeguidores);
+router.get('/seguindo/:usuario_id', controller.listagemDeUsuarios);
+
 
 export default router;

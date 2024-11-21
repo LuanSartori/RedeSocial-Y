@@ -3,7 +3,6 @@ import Usuarios from "../models/usuarios.js";
 const publicacoesController = {};
 
 
-// listar os usuários
 publicacoesController.listarPublicacoes = async (req, res) => {
 
     try {
@@ -34,7 +33,6 @@ publicacoesController.listarPublicacoes = async (req, res) => {
 }
 
 
-// criar um novo usuário
 publicacoesController.criarPublicacao = async (req, res) => {
     const { publicacao, usuario_id } = req.body;
     if (!publicacao.trim()) {
