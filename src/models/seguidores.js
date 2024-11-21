@@ -16,8 +16,7 @@ Seguidores.init(
   },
   {
     sequelize,
-    modelName: "Seguidores",
-    timestamps: true,
+    modelName: "Seguidores"
   }
 );
 

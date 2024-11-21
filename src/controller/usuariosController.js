@@ -24,6 +24,7 @@ usuariosController.listarUsuarios = async (req, res) => {
         res.status(200).json(usuarios);
         return;
     } catch (err) {
+        console.log(err);
         res.status(500).json({ 'erro': 'Erro ao listar usuários' });
         return;
     }

@@ -29,8 +29,7 @@ Publicacoes.init(
   },
   {
     sequelize,
-    modelName: "Publicacoes",
-    timestamps: true
+    modelName: "Publicacoes"
   }
 );
 

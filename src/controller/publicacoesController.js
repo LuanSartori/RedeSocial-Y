@@ -27,6 +27,7 @@ publicacoesController.listarPublicacoes = async (req, res) => {
         });
         return;
     } catch (err) {
+        console.log(err);
         res.status(500).json({ 'erro': "Erro ao buscar publicações" });
         return;
     }
@@ -54,6 +55,7 @@ publicacoesController.criarPublicacao = async (req, res) => {
         res.status(201).json({publicacao_id: publi.id});
         return;
     } catch (err) {
+        console.log(err);
         res.status(500).json({  'erro': "Erro ao criar a publicação"});
         return;
     }

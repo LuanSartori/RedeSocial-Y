@@ -16,8 +16,7 @@ CurtidasPublicacoes.init(
   },
   {
     sequelize,
-    modelName: "CurtidasPublicacoes",
-    timestamps: true,
+    modelName: "CurtidasPublicacoes"
   }
 );
 
