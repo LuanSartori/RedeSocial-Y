@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database.js";
 import Usuarios from "./usuarios.js";
+import CurtidasPublicacoes from "./curtidasPublicacoes.js";
 
 
 class Publicacoes extends Model {}
@@ -36,7 +37,23 @@ Publicacoes.init(
 Publicacoes.belongsTo(Usuarios, { foreignKey: "usuario_id", as: "usuario" });
 Usuarios.hasMany(Publicacoes, { foreignKey: "usuario_id", as: {singular: 'publicacao', plural: 'publicacoes'} });
 
-Publicacoes.belongsToMany(Usuarios, { through: "CurtidasPublicacoes", as: "Curtidas" });
-Usuarios.belongsToMany(Publicacoes, { through: "CurtidasPublicacoes", as: "Curtidas" });
+Publicacoes.belongsToMany(Usuarios, {
+  through: CurtidasPublicacoes,
+  foreignKey: "publicacao_id",
+  otherKey: "usuario_id",
+  as: {
+    singular: "curtidaNaPublicacao",
+    plural: "curtidasNaPlublicacao"
+  }
+});
+Usuarios.belongsToMany(Publicacoes, {
+  through: CurtidasPublicacoes,
+  foreignKey: "usuario_id",
+  otherKey: "publicacao_id",
+  as: {
+    singular: "curtidaNaPublicacao",
+    plural: "curtidasNaPublicacoes"
+  }
+});
 
 export default Publicacoes;

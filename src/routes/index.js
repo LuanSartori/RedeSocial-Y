@@ -3,6 +3,7 @@ import usuariosRouter from "./usuariosRouter.js";
 import seguidoresRouter from './seguidoresRouter.js';
 import publicacoesRouter from "./publicacoesRouter.js";
 import comentariosRouter from './comentariosRouter.js'
+import curtidasRouter from './curtidasRouter.js'
 
 
 // função que indexa todas as pastas de rotas
@@ -12,4 +13,5 @@ export default function(app) {
     app.use("/seguidores", seguidoresRouter);
     app.use("/publicacoes", publicacoesRouter);
     app.use("/comentarios", comentariosRouter);
+    app.use("/curtidas", curtidasRouter);
 }
