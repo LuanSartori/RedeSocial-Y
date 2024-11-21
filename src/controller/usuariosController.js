@@ -1,4 +1,5 @@
 import { Op } from "sequelize";
+import bcrypt from "bcrypt";
 import Usuarios from "../models/usuarios.js";
 const usuariosController = {};
 
@@ -37,10 +38,13 @@ usuariosController.criarUsuario = async (req, res) => {
 
     try {
 
+        const saltRounds = 10;
+        const hashSenha = bcrypt.hashSync(senha, saltRounds);
+
         const usuario = await Usuarios.create({
             nome: nome,
             email: email,
-            senha: senha,
+            senha: hashSenha,
             nascimento: nascimento,
             nick: nick
         })
