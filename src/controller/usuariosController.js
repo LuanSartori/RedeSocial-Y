@@ -49,11 +49,11 @@ usuariosController.criarUsuario = async (req, res) => {
       };
      
         if(await Usuarios.findAll({where : {email: usuario.email}})){ 
-            res.status(400).json({message: 'Email já em uso' });  
+            res.status(400).json({message: 'Email já está em uso' });  
             return;
       };
         if(await Usuarios.findAll({where : {nick: usuario.nick}})){ 
-            res.status(400).json({message: 'Nick já em uso' });  
+            res.status(400).json({message: 'Nick já está em uso' });  
             return;
       };
 
@@ -90,15 +90,16 @@ usuariosController.detalhesDoUsuario = async (req, res) => {
         const usuario = await Usuarios.findByPk(usuario_id);
 
         if (!usuario) {
-            res.status(400).json({ 'erro': 'Usuário não encontrado!' });
+            res.status(404).json({ 'erro': 'Usuário não encontrado!' });
         }
 
-        res.status(201).json({
+        res.status(200).json({
             nome: usuario.nome,
             email: usuario.email,
+            nick: usuario.nick,
+            imagem: usuario.imagem,
             senha: usuario.senha,
             nascimento: usuario.nascimento,
-            nick: usuario.nick
         });
         return;
     } catch (err) {
@@ -113,28 +114,51 @@ usuariosController.atualizarUsuario = async (req, res) => {
     const { nome, email, nick } = req.body;
 
     // TODO: Validações
-
+    
     try {
         const usuario = await Usuarios.findByPk(usuario_id);
+        const nick = usuario.nick;
+        const email = usuario.email;
 
         if (!usuario) {
-            res.status(400).json({ 'erro': 'Usuário não encontrado!' });
-        }
+            res.status(404).json({ 'erro': 'Usuário não encontrado!' });
+        } 
+
+        if(!nome && !email && !nick){ 
+            res.status(400).json({message: 'Pelo menos um campo deve ser fornecido para atualização' });  
+            return;
+      };
+     
+        if(await Usuarios.findAll({where : {email: usuario.email}})){ 
+            res.status(400).json({message: 'Email já está em uso' });  
+            return;
+      };
+
+      if(await Usuarios.findAll({where : {nick: usuario.nick}})){ 
+        res.status(400).json({message: 'Nick já está em uso' });  
+        return;
+  };
 
         usuario.set({
             nome: nome || usuario.nome,
             email: email || usuario.email,
             nick: nick || usuario.nick,
         });
-        usuario.save();
+        await usuario.save();
 
-        res.status(201).json(usuario);
+        res.status(201).json({
+            id: usuario.id,
+            nome: usuario.nome,
+            email: usuario.email,
+            nick: usuario.nick,
+            imagem: usuario.imagem,
+            nascimento: usuario.nascimento
+        });
         return;
     } catch (err) {
         res.status(500).json({ 'erro': 'Erro ao atualizar o usuário' });
         return;
     }
 }
-
 
 export default usuariosController;
