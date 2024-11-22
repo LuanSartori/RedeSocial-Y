@@ -19,7 +19,7 @@ const sequelize = new Sequelize(
         },
         logging: false,
         define: {
-            timestamps: true
+            timestamps: false
         }
     }
 );
