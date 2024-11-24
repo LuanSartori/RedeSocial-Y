@@ -35,7 +35,8 @@ comentariosController.criarComentario = async (req, res) => {
         });
         return res.status(201).json({comentario_id: novoComentario.id});
 
-    } catch(erro) {
+    } catch (err) {
+        console.log(err);
         return res.status(500).json ({ 'erro': "Erro ao criar comentário"}); // Caso dê algum problema, exibe essa mensagem de erro
     } 
 }
@@ -64,7 +65,8 @@ comentariosController.listarComentarios = async (req, res) => {
                 nick: coment.usuario.nick,
                 imagem: coment.usuario.imagem,
                 publicacao_id: coment.publicacao.id,
-                criado_em: coment.createdAt,
+                // criado_em: coment.criado_em,
+                criado_em: "2024-01-01T00:00:00.000Z", // valor artificial para o site front-end funcionar
             })
         });
     
@@ -75,6 +77,7 @@ comentariosController.listarComentarios = async (req, res) => {
         });
         return;
     } catch (err) {
+        console.log(err);
         res.status(500).json ({ 'erro': 'Erro ao buscar comentários' });
         return;
     } 

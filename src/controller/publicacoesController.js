@@ -17,7 +17,7 @@ publicacoesController.listarPublicacoes = async (req, res) => {
                 nick: pub.usuario.nick,
                 imagem: pub.usuario.imagem,
                 qtd_likes: pub.qtd_likes,
-                criado_em: pub.createdAt
+                criado_em: pub.criado_em
             })
         });
     
@@ -84,7 +84,7 @@ publicacoesController.listarPublicacoesDeUmUsuario = async (req, res) => {
                 imagem: usuario.imagem,
                 qtd_likes: pub.qtd_likes,
                 qtd_comentarios: pub.comentarios.length,
-                criado_em: pub.createAt
+                criado_em: pub.criado_em
             });
         })
 
@@ -95,6 +95,7 @@ publicacoesController.listarPublicacoesDeUmUsuario = async (req, res) => {
         return;
 
     } catch (err) {
+        console.log(err);
         res.status(500).json({ 'erro': 'Erro ao listar as publicações' })
         return;
     }
@@ -106,12 +107,23 @@ publicacoesController.obterPublicacao = async (req, res) => {
     const { publicacao_id } = req.params;
 
     try {
-        const publicacao = await Publicacoes.findByPk(publicacao_id, { include: ['usuario', 'comentarios'] });
+        const publicacao = await Publicacoes.findByPk(publicacao_id, { include: ['usuario', { association: 'comentarios', include: 'usuario' }] });
         if (!publicacao) {
             res.status(404).json({ 'erro': 'Publicação não encontrada' });
             return;
         }
 
+        const comentarios = publicacao.comentarios.map( (coment) => { 
+            return {
+                comentario_id: coment.id,
+                comentario: coment.comentario,
+                usuario_id: coment.usuario_id,
+                nick: coment.usuario.nick,
+                imagem: coment.usuario.imagem,
+                qtd_likes: coment.qtd_likes,
+                criado_em: "2024-01-01T00:00:00.000Z" // valor artificial para o site front-end funcionar
+            }
+        } )
         const data = {
             publicacao_id: publicacao.id,
             publicacao: publicacao.publicacao,
@@ -119,15 +131,16 @@ publicacoesController.obterPublicacao = async (req, res) => {
             nick: publicacao.usuario.nick,
             imagem: publicacao.usuario.imagem,
             qtd_likes: publicacao.qtd_likes,
-            criado_em: publicacao.createdAt,
-            comentarios: publicacao.comentarios
+            criado_em: publicacao.criado_em,
+            comentarios: comentarios
         }
 
         res.status(200).json(data);
         return;
         
     } catch (err) {
-        res.status(500).json({ 'erro': 'Erro ao listar as publicações' })
+        console.log(err);
+        res.status(500).json({ 'erro': 'Erro ao listar as publicações' });
         return;
     }
 }
@@ -157,7 +170,6 @@ publicacoesController.deletarPublicacao = async (req, res) => {
         
     } catch (err) {
         console.log(err);
-        
         res.status(500).json({ 'erro': 'Erro ao listar as publicações' })
         return;
     }

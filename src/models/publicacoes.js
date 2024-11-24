@@ -29,7 +29,10 @@ Publicacoes.init(
   },
   {
     sequelize,
-    modelName: "Publicacoes"
+    modelName: "Publicacoes",
+    timestamps: true,
+    createdAt: "criado_em",
+    updatedAt: false
   }
 );
 

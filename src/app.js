@@ -6,8 +6,8 @@ import express from "express";
 const app = express();
 
 // VARIÁVEIS DE AMBIENTE
-const __dirname = import.meta.dirname;
-const PORT = process.env.PORT || 3000;
+const __dirname = import.meta.dirname || path.dirname(process.argv[1]);
+const PORT = process.env.DB_PORT || 3000;
 
 // CONFIGURAÇÕES
 app.set('view engine', 'ejs');
@@ -28,7 +28,7 @@ const startServer = async () => {
   try {
     await sequelize.sync(); // Isso cria as tabelas se elas não existirem
     app.listen(PORT, () => {
-      console.log("Servidor rodando na porta 3000");
+      console.log(`Servidor rodando na porta ${PORT}`);
     });
   } catch (error) {
     console.error("Erro ao iniciar o servidor:", error);

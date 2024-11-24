@@ -34,9 +34,7 @@ usuariosController.listarUsuarios = async (req, res) => {
 
 // criar um novo usuário
 usuariosController.criarUsuario = async (req, res) => {
-    const { nome, email, senha, nascimento, nick } = req.body;
-
-    // TODO: Validações
+    const { nome, email, senha, nascimento, nick, imagem } = req.body;
 
     try {
 
@@ -46,36 +44,33 @@ usuariosController.criarUsuario = async (req, res) => {
         if(!{nome, email, senha, nascimento, nick}){ 
             res.status(400).json({message: 'Todos os campos são obrigatorios' });  
             return;
-      };
-     
-        if(await Usuarios.findAll({where : {email: usuario.email}})){ 
+        } else if ((await Usuarios.findAll( { where: {email: email} } )).length ){ 
             res.status(400).json({message: 'Email já está em uso' });  
             return;
-      };
-        if(await Usuarios.findAll({where : {nick: usuario.nick}})){ 
+        } else if ((await Usuarios.findAll( { where : {nick: nick} })).length ){ 
             res.status(400).json({message: 'Nick já está em uso' });  
             return;
-      };
+        };
 
-      const datanascimento = new Date(nascimento);
-      
-      if(calcularIdade(datanascimento, new Date())<= 16){ 
-        res.status(400).json({message: 'A idade deve ser maior que 16 anos' });  
-        return;
-      };
- 
+        const datanascimento = new Date(nascimento);
+        if(calcularIdade(datanascimento, new Date())<= 16){ 
+            res.status(400).json({message: 'A idade deve ser maior que 16 anos' });  
+            return;
+        };
 
         const usuario = await Usuarios.create({
             nome: nome,
             email: email,
             senha: hashSenha,
             nascimento: nascimento,
-            nick: nick
+            nick: nick,
+            imagem: imagem
         })
     
         res.status(201).json(usuario);
         return;
     } catch (err) {
+        console.log(err);
         res.status(500).json({ 'erro': 'Erro ao criar o usuário' });
         return;
     }
@@ -103,6 +98,7 @@ usuariosController.detalhesDoUsuario = async (req, res) => {
         });
         return;
     } catch (err) {
+        console.log(err);
         res.status(500).json({ 'erro': 'Erro ao detalhar o usuário' });
         return;
     }
@@ -112,32 +108,28 @@ usuariosController.detalhesDoUsuario = async (req, res) => {
 usuariosController.atualizarUsuario = async (req, res) => {
     const { usuario_id } = req.params;
     const { nome, email, nick } = req.body;
-
-    // TODO: Validações
     
     try {
         const usuario = await Usuarios.findByPk(usuario_id);
-        const nick = usuario.nick;
-        const email = usuario.email;
 
         if (!usuario) {
             res.status(404).json({ 'erro': 'Usuário não encontrado!' });
         } 
 
-        if(!nome && !email && !nick){ 
+        if(nome == usuario.nome && email == usuario.email && nick == usuario.nick){ 
             res.status(400).json({message: 'Pelo menos um campo deve ser fornecido para atualização' });  
             return;
-      };
+        };
      
-        if(await Usuarios.findAll({where : {email: usuario.email}})){ 
+        if(email != usuario.email && await Usuarios.findAll({where : {email: email} })){
             res.status(400).json({message: 'Email já está em uso' });  
             return;
-      };
+        };
 
-      if(await Usuarios.findAll({where : {nick: usuario.nick}})){ 
-        res.status(400).json({message: 'Nick já está em uso' });  
-        return;
-  };
+        if(nick != usuario.nick && await Usuarios.findAll({where : {nick: nick} })){
+            res.status(400).json({message: 'Nick já está em uso' });  
+            return;
+        };
 
         usuario.set({
             nome: nome || usuario.nome,
@@ -156,6 +148,7 @@ usuariosController.atualizarUsuario = async (req, res) => {
         });
         return;
     } catch (err) {
+        console.log(err);
         res.status(500).json({ 'erro': 'Erro ao atualizar o usuário' });
         return;
     }

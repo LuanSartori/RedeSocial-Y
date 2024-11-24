@@ -35,6 +35,9 @@ Comentarios.init(
   {
     sequelize,
     modelName: "Comentarios",
+    timestamps: false,
+    createdAt: "criado_em",
+    updatedAt: false
   }
 );
 

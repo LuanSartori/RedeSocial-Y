@@ -34,7 +34,8 @@ Usuarios.init(
     },
     imagem: {
       type: DataTypes.STRING,
-      allowNull: false,
+      defaultValue: "padrão.jpg",
+      allowNull: true,
     },
   },
   {
@@ -46,7 +47,7 @@ Usuarios.init(
 Usuarios.belongsToMany(Usuarios, {
   through: Seguidores,
   foreignKey: 'usuario_id',
-  otherKey: 'usuario_seguido_id',
+  otherKey: 'seguidor_id',
   as: {
     singular: "seguir",
     plural: "seguem"
@@ -54,7 +55,7 @@ Usuarios.belongsToMany(Usuarios, {
 });
 Usuarios.belongsToMany(Usuarios, {
   through: Seguidores,
-  foreignKey: 'usuario_seguido_id',
+  foreignKey: 'seguidor_id',
   otherKey: 'usuario_id',
   as: {
     singular: "seguidor",

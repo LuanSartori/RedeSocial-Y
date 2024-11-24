@@ -60,7 +60,8 @@ seguidoresController.deixarDeSeguirUsuario = async (req, res) => {
         res.status(201).json({ seguidor_id: usuario_a_seguir_id });
         return;
         
-    } catch (erro) { 
+    } catch (err) { 
+        console.log(err);
         res.status(500).json({ 'erro': 'Erro ao deixar de seguir usuário.' });
     }
 }
@@ -99,7 +100,8 @@ seguidoresController.listagemDeSeguidores = async (req, res) => {
         })
         return;
 
-    } catch (erro) {
+    } catch (err) {
+        console.log(err);
         res.status(500).json({ 'erro': 'Erro ao buscar seguidores.'});
         return;
     }
@@ -134,7 +136,8 @@ seguidoresController.listagemDeUsuarios = async (req, res) => {
         })
         return;
 
-    } catch (erro) {
+    } catch (err) {
+        console.log(err);
         res.status(500).json({ 'erro': 'Erro ao buscar usuários seguidos.'});
         return;
     }

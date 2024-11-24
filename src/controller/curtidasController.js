@@ -26,6 +26,7 @@ curtidasController.curtirPublicacao = async (req, res) => {
         res.status(200).json({ 'qtd_likes': publicacao.qtd_likes });
         return;
     } catch (err) {
+        console.log(err);
         res.status(500).json({ 'erro': 'Erro ao curtir a publicação' });
         return;
     }
@@ -54,6 +55,7 @@ curtidasController.descurtirPublicacao = async (req, res) => {
         res.status(200).json({ 'qtd_likes': publicacao.qtd_likes });
         return;
     } catch (err) {
+        console.log(err);
         res.status(500).json({ 'erro': 'Erro ao remover curtida' });
         return;
     }
@@ -81,6 +83,7 @@ curtidasController.curtirComentario = async (req, res) => {
         res.status(200).json({ 'qtd_likes': comentario.qtd_likes });
         return;
     } catch (err) {
+        console.log(err);
         res.status(500).json({ 'erro': 'Erro ao curtir o comentário' });
         return;
     }
@@ -109,6 +112,7 @@ curtidasController.descurtirComentario = async (req, res) => {
         res.status(200).json({ 'qtd_likes': comentario.qtd_likes });
         return;
     } catch (err) {
+        console.log(err);
         res.status(500).json({ 'erro': 'Erro ao remover curtida' });
         return;
     }
