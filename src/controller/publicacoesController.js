@@ -9,13 +9,14 @@ publicacoesController.listarPublicacoes = async (req, res) => {
     try {
         const publicacoes = await Publicacoes.findAll({
             include: [
-            "usuario",
-            {
-                model: Comentarios,
-                as: "comentarios",
-                attributes: [ 'id' ]
-            }
-            ]
+                "usuario",
+                {
+                    model: Comentarios,
+                    as: "comentarios",
+                    attributes: [ 'id' ]
+                }
+            ],
+            order: [ ['criado_em', 'DESC'] ]
         });
     
         var data = [];
