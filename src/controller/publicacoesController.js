@@ -1,12 +1,22 @@
 import Publicacoes from "../models/publicacoes.js";
 import Usuarios from "../models/usuarios.js";
+import Comentarios from "../models/comentarios.js"
 const publicacoesController = {};
 
 
 publicacoesController.listarPublicacoes = async (req, res) => {
 
     try {
-        const publicacoes = await Publicacoes.findAll({include: "usuario"});
+        const publicacoes = await Publicacoes.findAll({
+            include: [
+            "usuario",
+            {
+                model: Comentarios,
+                as: "comentarios",
+                attributes: [ 'id' ]
+            }
+            ]
+        });
     
         var data = [];
         publicacoes.forEach(pub => {
@@ -17,6 +27,7 @@ publicacoesController.listarPublicacoes = async (req, res) => {
                 nick: pub.usuario.nick,
                 imagem: pub.usuario.imagem,
                 qtd_likes: pub.qtd_likes,
+                qtd_comentarios: pub.comentarios.length,
                 criado_em: pub.criado_em
             })
         });

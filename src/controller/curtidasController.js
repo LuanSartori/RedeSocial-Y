@@ -1,4 +1,3 @@
-import { Sequelize } from "sequelize";
 import Publicacoes from "../models/publicacoes.js";
 import Comentarios from "../models/comentarios.js"
 const curtidasController = {};
