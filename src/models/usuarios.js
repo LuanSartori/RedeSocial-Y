@@ -34,7 +34,7 @@ Usuarios.init(
     },
     imagem: {
       type: DataTypes.STRING,
-      defaultValue: "padrão.jpg",
+      defaultValue: "https://cdn-icons-png.flaticon.com/128/149/149071.png",
       allowNull: true,
     },
   },

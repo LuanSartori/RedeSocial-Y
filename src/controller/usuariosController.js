@@ -92,7 +92,7 @@ usuariosController.detalhesDoUsuario = async (req, res) => {
             nome: usuario.nome,
             email: usuario.email,
             nick: usuario.nick,
-            imagem: usuario.imagem,
+            imagem: usuario.imagem || "https://cdn-icons-png.flaticon.com/128/149/149071.png",
             senha: usuario.senha,
             nascimento: usuario.nascimento,
         });
